@@ -63,3 +63,7 @@ crashlytics-build.properties
 
 
 Project-Cut-Your_pictures/Library/
+
+Project-Cut-Your_pictures/Temp/
+
+Project-Cut-Your_pictures/obj/Debug/
