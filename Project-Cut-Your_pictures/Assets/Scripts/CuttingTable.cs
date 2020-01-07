@@ -26,12 +26,4 @@ public class CuttingTable : MonoBehaviour
 		piece.sprite = Resources.Load<Sprite>(currentLevelData.piecePath);
 
 	}
-
-	private void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			LoadLevel(++currentLevelIndex);
-		}
-	}
 }
