@@ -12,6 +12,8 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 	public float rotationAngle = 1f;
 	public float FreezeDuration = 2f;
 
+	float speedModifier = 1f;
+
 	Vector2 direction = Vector2.right;
 	int rotateDirection;
 	bool rotating;
@@ -35,11 +37,30 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 
 		if (rotating)
 			Rotate();
+
+#if UNITY_EDITOR
+		if (Input.GetKeyDown(KeyCode.LeftArrow))
+			StartRotation(1);
+		if (Input.GetKeyDown(KeyCode.RightArrow))
+			StartRotation(-1);
+
+		if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))
+			EndRotation();
+
+		if (Input.GetKeyDown(KeyCode.UpArrow))
+			speedModifier = 5f;
+
+		if (Input.GetKeyUp(KeyCode.UpArrow))
+			speedModifier = 1f;
+
+		if (Input.GetKeyDown(KeyCode.Space))
+			Freeze();
+#endif
 	}
 
 	private void Move()
 	{
-		transform.Translate(Vector3.up * speed);
+		transform.Translate(Vector3.up * speed * speedModifier);
 
 		LimitInCuttingArea();
 	}

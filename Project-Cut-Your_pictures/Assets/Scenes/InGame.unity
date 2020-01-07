@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb28920be8d30614fbe806f8eee1f66b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.005
+  speed: 0.01
   rotationAngle: 1
   FreezeDuration: 3
 --- !u!1 &478201117
@@ -1196,6 +1196,7 @@ GameObject:
   - component: {fileID: 2094591618}
   - component: {fileID: 2094591617}
   - component: {fileID: 2094591619}
+  - component: {fileID: 2094591620}
   m_Layer: 0
   m_Name: CuttingTable
   m_TagString: Untagged
@@ -1293,6 +1294,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5.5, y: 5.5}
   m_EdgeRadius: 0
+--- !u!114 &2094591620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094591616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c9c79cc5b1a9c45954e2bacb54b557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2101904330
 GameObject:
   m_ObjectHideFlags: 0
@@ -1303,6 +1316,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2101904331}
   - component: {fileID: 2101904332}
+  - component: {fileID: 2101904333}
   m_Layer: 0
   m_Name: Template
   m_TagString: Untagged
@@ -1373,3 +1387,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2101904333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101904330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd3f0003324026459b3c2539474fc0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
