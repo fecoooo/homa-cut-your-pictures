@@ -14,7 +14,6 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 
 	float speedModifier = 1f;
 
-	Vector2 direction = Vector2.right;
 	int rotateDirection;
 	bool rotating;
 
@@ -56,6 +55,15 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 		if (Input.GetKeyDown(KeyCode.Space))
 			Freeze();
 #endif
+	}
+
+	public void Init(LevelData currentLevelData)
+	{
+		FreezeCount = currentLevelData.freezeCount;
+		transform.position = currentLevelData.startingPosition;
+		transform.eulerAngles = new Vector3(0, 0, currentLevelData.startingRotation);
+		
+		FreezeCountChanged(FreezeCount);
 	}
 
 	private void Move()
