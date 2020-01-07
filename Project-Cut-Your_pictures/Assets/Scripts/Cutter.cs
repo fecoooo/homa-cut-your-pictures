@@ -14,9 +14,6 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 	float rotationAngle = 1f;
 	[SerializeField]
 	float freezeDuration = 2f;
-	[SerializeField]
-	int _eraseSizeInPixels = 38;
-	public int EraseSizeInPixels { get => _eraseSizeInPixels; }
 
 	float speedModifier = 1f;
 
@@ -33,20 +30,6 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 	{
 		cuttingArea = GameObject.Find("CuttingTable").GetComponent<BoxCollider2D>().bounds;
 		FreezeCountChanged += OnFreezeCountChanged;
-
-		SetEraserSizeByErasePixels();
-	}
-
-	private void SetEraserSizeByErasePixels()
-	{
-		//other side of calculation: (GetComponent<SpriteRenderer>().bounds.size.y * Screen.height) / (Camera.main.orthographicSize * 2.0);
-		Transform direction = transform.Find("Direction").transform;
-		direction.parent = null;
-
-		float newScaleX = (EraseSizeInPixels / (float)Screen.height) * 100 * Camera.main.orthographicSize;
-		transform.localScale = new Vector3(newScaleX, 1, 1);
-
-		direction.parent = transform;
 	}
 
 	void Update()
