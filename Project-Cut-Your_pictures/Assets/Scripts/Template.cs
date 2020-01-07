@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Template:MonoBehaviour
 {
+	public bool visualize;
 	readonly Color Alpha = new Color(0, 0, 0, 0);
 
 	public float Progress
@@ -45,10 +46,15 @@ public class Template:MonoBehaviour
 		Bounds bounds = GetComponent<SpriteRenderer>().bounds;
 		BotLeft_readonly = bounds.center - bounds.extents;
 		Size_readonly = bounds.size;
+
+		spriteRenderer.enabled = visualize;
 	}
 
 	void Update()
     {
+		if (!CuttingTable.instance.InGameCutting)
+			return;
+
 		DoCurrentCut();
 	}
 
@@ -56,9 +62,19 @@ public class Template:MonoBehaviour
 	{
 		if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.black)
 			currentBlackPixels--;
+		else if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.magenta)
+			CuttingTable.instance.Fail();
+		else if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.green)
+		{
+			Debug.Log(currentBlackPixels + "/" + initialBlackPixels);
+			CuttingTable.instance.EndedCircle(currentBlackPixels);
+		}
+			
 
 		currentTexture.SetPixel(CutterTexturePosition.x, CutterTexturePosition.y, Alpha);
-		Visualize();
+
+		if (visualize)
+			Visualize();
 	}
 
 	public void LoadImage(string path)

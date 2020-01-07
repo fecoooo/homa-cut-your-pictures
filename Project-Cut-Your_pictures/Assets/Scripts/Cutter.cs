@@ -25,7 +25,6 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 
 	Bounds cuttingArea;
 
-
 	private void Start()
 	{
 		cuttingArea = GameObject.Find("CuttingTable").GetComponent<BoxCollider2D>().bounds;
@@ -34,7 +33,10 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 
 	void Update()
     {
-		if(!isFreezed)
+		if (!CuttingTable.instance.InGameCutting)
+			return;
+
+		if (!isFreezed)
 			Move();
 
 		if (rotating)
