@@ -1,17 +1,26 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Template : MonoBehaviour
+public class Template:MonoBehaviour
 {
+	readonly Color Alpha = new Color(0, 0, 0, 0);
+
+	public float Progress
+	{
+		get => currentBlackPixels / (float)initialBlackPixels;
+	}
+
+	int initialBlackPixels;
+	int currentBlackPixels;
+
 	SpriteRenderer spriteRenderer;
 	Texture2D currentTexture;
 
 	Vector2 BotLeft_readonly;
 	Vector2 Size_readonly;
 
-	readonly Color Alpha = new Color(0, 0, 0, 0);
 
 	Vector2Int CutterTexturePosition
 	{
@@ -41,10 +50,13 @@ public class Template : MonoBehaviour
 	void Update()
     {
 		DoCurrentCut();
-    }
+	}
 
 	private void DoCurrentCut()
 	{
+		if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.black)
+			currentBlackPixels--;
+
 		currentTexture.SetPixel(CutterTexturePosition.x, CutterTexturePosition.y, Alpha);
 		Visualize();
 	}
@@ -55,6 +67,14 @@ public class Template : MonoBehaviour
 		currentTexture = new Texture2D(loadedTexture2D.width, loadedTexture2D.height);
 		currentTexture.SetPixels(loadedTexture2D.GetPixels());
 		currentTexture.Apply();
+
+		foreach(Color c in currentTexture.GetPixels())
+		{
+			if(c == Color.black)
+				initialBlackPixels++;
+		}
+
+		currentBlackPixels = initialBlackPixels;
 	}
 
 	void Visualize()
