@@ -65,7 +65,7 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 	public void Init(LevelData currentLevelData)
 	{
 		FreezeCount = currentLevelData.freezeCount;
-		transform.position = currentLevelData.startingPosition;
+		transform.localPosition = currentLevelData.startingPosition;
 		transform.eulerAngles = new Vector3(0, 0, currentLevelData.startingRotation);
 		
 		FreezeCountChanged(FreezeCount);

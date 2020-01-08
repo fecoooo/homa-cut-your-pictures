@@ -3,18 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Template:MonoBehaviour
+public class Template : MonoBehaviourSingleton<Template>
 {
 	public bool visualize;
 	readonly Color Alpha = new Color(0, 0, 0, 0);
 
 	public float Progress
 	{
-		get => currentBlackPixels / (float)initialBlackPixels;
+		get => Mathf.Clamp01(pixelsCut / (float)minimumPixelToCut);
 	}
 
-	int initialBlackPixels;
-	int currentBlackPixels;
+	//int initialBlackPixels;
+	//int currentBlackPixels;
+
+	int pixelsCut;
+	int minimumPixelToCut;
 
 	SpriteRenderer spriteRenderer;
 	Texture2D currentTexture;
@@ -61,13 +64,14 @@ public class Template:MonoBehaviour
 	private void DoCurrentCut()
 	{
 		if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.black)
-			currentBlackPixels--;
+			pixelsCut++;
 		else if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.magenta)
 			CuttingTable.instance.Fail();
 		else if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.green)
 		{
-			Debug.Log(currentBlackPixels + "/" + initialBlackPixels);
-			CuttingTable.instance.EndedCircle(currentBlackPixels);
+			Debug.Log(pixelsCut + "/" + minimumPixelToCut);
+			//Debug.Log(currentBlackPixels + "/" + initialBlackPixels);
+			CuttingTable.instance.EndedCircle(pixelsCut);
 		}
 			
 
@@ -77,20 +81,22 @@ public class Template:MonoBehaviour
 			Visualize();
 	}
 
-	public void LoadImage(string path)
+	public void Init(string path, int minimumPixelToCut)
 	{
 		Texture2D loadedTexture2D = Resources.Load<Texture2D>(path);
 		currentTexture = new Texture2D(loadedTexture2D.width, loadedTexture2D.height);
 		currentTexture.SetPixels(loadedTexture2D.GetPixels());
 		currentTexture.Apply();
 
-		foreach(Color c in currentTexture.GetPixels())
-		{
-			if(c == Color.black)
-				initialBlackPixels++;
-		}
+		//foreach(Color c in currentTexture.GetPixels())
+		//{
+		//	if(c == Color.black)
+		//		initialBlackPixels++;
+		//}
 
-		currentBlackPixels = initialBlackPixels;
+		//currentBlackPixels = initialBlackPixels;
+		this.minimumPixelToCut = minimumPixelToCut;
+		pixelsCut = 0;
 	}
 
 	void Visualize()

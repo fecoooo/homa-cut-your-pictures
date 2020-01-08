@@ -41,7 +41,7 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		currentLevelData = GamePrefs.instance.LevelDatas[levelIndex];
 
 		Cutter.instance.Init(currentLevelData);
-		template.LoadImage(currentLevelData.templatePath);
+		template.Init(currentLevelData.templatePath, currentLevelData.minimumPixelToCut);
 		piece.sprite = Resources.Load<Sprite>(currentLevelData.piecePath);
 	}
 
@@ -53,12 +53,11 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 
 	public void EndedCircle(int pixelsCut)
 	{
-		if (pixelsCut < currentLevelData.minimumPixelToCut)
+		if (pixelsCut >= currentLevelData.minimumPixelToCut)
 			Debug.Log("You won!");
 		else
 			Debug.Log("You lose!");
 
 		InGameCutting = false;
-		Debug.Log("You made a circle");
 	}
 }
