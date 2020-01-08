@@ -99,7 +99,18 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 
 	public void EndRotation()
 	{
+		CorrectRotation();
 		rotating = false;
+	}
+
+	private void CorrectRotation()
+	{
+		float remainder = transform.eulerAngles.z % 2;
+		int newRotationZ = remainder < 1f ? 
+			Mathf.CeilToInt(transform.eulerAngles.z - remainder) : 
+			Mathf.CeilToInt(transform.eulerAngles.z - remainder) + 2;
+
+		transform.eulerAngles = new Vector3(0, 0, newRotationZ);
 	}
 
 	public void Freeze()

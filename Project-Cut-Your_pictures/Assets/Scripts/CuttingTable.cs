@@ -24,8 +24,14 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		StartGame();
     }
 
+	public void Restart()
+	{
+		StartGame();
+	}
+
 	void StartGame()
 	{
+		InGameCutting = false;
 		LoadLevel(currentLevelIndex);
 		StartCoroutine(CountDownThanStart());
 	}
