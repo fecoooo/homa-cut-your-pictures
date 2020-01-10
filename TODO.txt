@@ -1,0 +1,5 @@
+set piece selected
+color out piece
+grayscale shader
+buttons for each piece / level
+transition between pictures
