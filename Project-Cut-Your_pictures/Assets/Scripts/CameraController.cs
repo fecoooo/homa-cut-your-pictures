@@ -4,25 +4,21 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviourSingleton<CameraController>
 {
-	const float zoomedInCameraSize = 7.5f;
-	const float zoomedOutCameraSize = 25f;
+	const float CameraZ = -10f;
 
-	const float movePieceAnimTime = 1f;
-	
-	public float focusAnimTime = .5f;
-	public float zoomAnimTime = .5f;
+	const float ZoomedInCameraSize = 7.5f;
+	const float ZoomedOutCameraSize = 25f;
 
-	public Transform cuttingTable;
+	const float MovePieceAnimTime = 1f;
 
-	Vector3 mainMenuPosition;
-	Transform originalParent;
-	Transform currentPiece;
+	const float FocusAnimTime = 0.5f;
+	const float ZoomAnimTime = 0.5f;
 
 	new Camera camera;
 
 	bool IsZoomedIn
 	{
-		get => camera.orthographicSize - zoomedInCameraSize < Mathf.Epsilon;
+		get => camera.orthographicSize - ZoomedInCameraSize < Mathf.Epsilon;
 	}
 
 	private void Start()
@@ -30,59 +26,29 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 		camera = GetComponent<Camera>();
 	}
 
-	public void MovePieceBackToPicture()
+	public void MovePiece(Vector2 from, Vector2 to, Transform piece)
 	{
-		StartCoroutine(MovePieceBackToPictureRoutine());
+		StartCoroutine(MovePieceRoutine(from, to, piece));
 	}
 
-	IEnumerator MovePieceBackToPictureRoutine()
+	public IEnumerator MovePieceRoutine(Vector2 from, Vector2 to, Transform piece)
 	{
-		currentPiece.parent = camera.transform;
+		piece.parent = camera.transform;
 		float timePassed = 0;
 
-		while (timePassed < movePieceAnimTime)
+		while (timePassed < MovePieceAnimTime)
 		{
-			float t = timePassed / movePieceAnimTime;
+			float t = timePassed / MovePieceAnimTime;
 
-			Vector3 currentPosition = Vector2.Lerp(cuttingTable.position, mainMenuPosition, t);
-			currentPosition.z = mainMenuPosition.z;
+			Vector3 currentPosition = Vector2.Lerp(from, to, t);
+			currentPosition.z = CameraZ;
 			transform.position = currentPosition;
 
 			timePassed += Time.deltaTime;
 			yield return null;
 		}
 
-		transform.position = mainMenuPosition;
-		currentPiece.parent = originalParent;
-	}
-
-	public void MovePieceToCuttingTable(Transform piece)
-	{
-		currentPiece = piece;
-		StartCoroutine(MovePieceToCuttingTableRoutine());
-	}
-
-	IEnumerator MovePieceToCuttingTableRoutine()
-	{
-		originalParent = currentPiece.parent;
-		currentPiece.parent = camera.transform;
-		float timePassed = 0;
-
-		mainMenuPosition = transform.position;
-
-		while (timePassed < movePieceAnimTime)
-		{
-			float t = timePassed / movePieceAnimTime;
-
-			Vector3 currentPosition = Vector2.Lerp(mainMenuPosition, cuttingTable.position, t);
-			currentPosition.z = mainMenuPosition.z;
-			transform.position = currentPosition;
-
-			timePassed += Time.deltaTime;
-			yield return null;
-		}
-
-		transform.position = new Vector3(cuttingTable.position.x, cuttingTable.position.y, mainMenuPosition.z);
+		transform.position = new Vector3(to.x, to.y, CameraZ);
 	}
 
 	public void FocusImage(Vector2 imageCenter, bool withZoomTransition)
@@ -106,9 +72,9 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 		float timePassed = 0;
 		Vector3 originalPosition = transform.position;
 
-		while(timePassed < focusAnimTime)
+		while(timePassed < FocusAnimTime)
 		{
-			float t = timePassed / focusAnimTime;
+			float t = timePassed / FocusAnimTime;
 
 			Vector3 currentPosition = Vector2.Lerp(originalPosition, imageCenter, t);
 			currentPosition.z = originalPosition.z;
@@ -125,20 +91,20 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 	{
 		float timePassed = 0;
 
-		while (timePassed < zoomAnimTime)
+		while (timePassed < ZoomAnimTime)
 		{
-			float t = timePassed / zoomAnimTime;
+			float t = timePassed / ZoomAnimTime;
 
 			if (zoomType == ZoomType.Out)
 				t = 1 - t;
 
-			camera.orthographicSize = Mathf.Lerp(zoomedOutCameraSize, zoomedInCameraSize, t);
+			camera.orthographicSize = Mathf.Lerp(ZoomedOutCameraSize, ZoomedInCameraSize, t);
 
 			timePassed += Time.deltaTime;
 			yield return null;
 		}
 
-		camera.orthographicSize = zoomType == ZoomType.In ? zoomedInCameraSize : zoomedOutCameraSize;
+		camera.orthographicSize = zoomType == ZoomType.In ? ZoomedInCameraSize : ZoomedOutCameraSize;
 	}
 
 	enum ZoomType

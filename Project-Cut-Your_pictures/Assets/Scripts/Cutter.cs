@@ -25,8 +25,9 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 
 	Bounds cuttingArea;
 
-	private void Start()
+	protected override void OnAwake()
 	{
+		base.OnAwake();
 		cuttingArea = GameObject.Find("CuttingTable").GetComponent<BoxCollider2D>().bounds;
 		FreezeCountChanged += OnFreezeCountChanged;
 	}

@@ -21,7 +21,7 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 
 		currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
 
-		StartGame();
+		//StartGame();
     }
 
 	public void Restart()
