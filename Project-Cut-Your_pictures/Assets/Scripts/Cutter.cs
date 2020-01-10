@@ -7,6 +7,7 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 {
 	public delegate void FreezeCountChangeHandler(int newValue);
 	public event FreezeCountChangeHandler FreezeCountChanged;
+	const float VibrateCycleTime = 1f;
 
 	[SerializeField]
 	float speed = 0.01f;
@@ -22,6 +23,8 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 
 	bool isFreezed;
 	public int FreezeCount { get; private set; } = 10;
+
+	float lastVibrate = VibrateCycleTime;
 
 	Bounds cuttingArea;
 
@@ -73,7 +76,13 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 
 	private void Move()
 	{
-		Handheld.Vibrate();
+		lastVibrate += Time.deltaTime;
+
+		if(lastVibrate >= VibrateCycleTime)
+		{
+			Handheld.Vibrate();
+			lastVibrate = 0;
+		}
 
 		transform.Translate(Vector3.up * speed * speedModifier);
 
