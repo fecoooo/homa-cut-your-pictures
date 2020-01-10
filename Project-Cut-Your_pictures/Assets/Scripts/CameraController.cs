@@ -26,12 +26,12 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 		camera = GetComponent<Camera>();
 	}
 
-	public void MovePiece(Vector2 from, Vector2 to, Transform piece)
+	public void MovePiece(Vector2 from, Vector2 to, Transform piece, Vector2 targetPiecePos)
 	{
-		StartCoroutine(MovePieceRoutine(from, to, piece));
+		StartCoroutine(MovePieceRoutine(from, to, piece, targetPiecePos));
 	}
 
-	public IEnumerator MovePieceRoutine(Vector2 from, Vector2 to, Transform piece)
+	public IEnumerator MovePieceRoutine(Vector2 from, Vector2 to, Transform piece, Vector2 targetPiecePos)
 	{
 		piece.parent = camera.transform;
 		float timePassed = 0;
@@ -44,11 +44,16 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 			currentPosition.z = CameraZ;
 			transform.position = currentPosition;
 
+			Vector3 currentOffset = Vector3.Lerp(Vector2.zero, targetPiecePos, t);
+			currentOffset.z = piece.localPosition.z;
+			piece.localPosition = currentOffset;
+
 			timePassed += Time.deltaTime;
 			yield return null;
 		}
 
 		transform.position = new Vector3(to.x, to.y, CameraZ);
+		piece.localPosition = new Vector3(targetPiecePos.x, targetPiecePos.y, piece.localPosition.z);
 	}
 
 	public void FocusImage(Vector2 imageCenter, bool withZoomTransition)

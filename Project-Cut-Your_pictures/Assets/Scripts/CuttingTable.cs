@@ -6,9 +6,12 @@ using UnityEngine;
 public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 {
 	const float ScaleUpAnimTime = 0.3f;
+	const float CountDownTime = 1f;
+	const float TimeBetweenScaleUpAndUI = .3f;
+
+	public GameObject CuttingUI;
 
 	public bool InGameCutting { get; private set; }
-	const float CountDownTime = 1f;
 
 	Template template;
 	SpriteRenderer piece;
@@ -67,6 +70,18 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 			Debug.Log("You lose!");
 
 		InGameCutting = false;
+	}
+
+	public void InitTable()
+	{
+		StartCoroutine(InitTableRoutine());
+	}
+
+	IEnumerator InitTableRoutine()
+	{
+		yield return ScaleUp();
+		yield return new WaitForSeconds(TimeBetweenScaleUpAndUI);
+		CuttingUI.SetActive(true);
 	}
 
 	public IEnumerator ScaleUp()

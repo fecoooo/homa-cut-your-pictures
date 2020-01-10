@@ -9,9 +9,16 @@ public class GameHandler : MonoBehaviour
 	public Transform[] imagesToFocus;
 	int currentImageIndex = -1;
 
-	public Transform cuttingTable;
+	public Transform cuttingTableScene;
+
+	CuttingTable cuttingTable;
 	Transform currentPiece;
 	Transform currentPicture;
+
+	void Start()
+	{
+		cuttingTable = cuttingTableScene.Find("CuttingTable").GetComponent<CuttingTable>();
+	}
 
 	void Update()
     {
@@ -26,25 +33,24 @@ public class GameHandler : MonoBehaviour
 		}
 
 		if (Input.GetKeyDown(KeyCode.LeftShift))
-			StartCoroutine(MovePieceToCuttingTable());
+			StartCoroutine(StartGameOnPiece());
 
 		if (Input.GetKeyDown(KeyCode.LeftControl))
 			StartCoroutine(MovePieceToPicture());
 	}
 
-	IEnumerator MovePieceToCuttingTable()
+	IEnumerator StartGameOnPiece()
 	{
-		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, cuttingTable.position, currentPiece);
+		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, cuttingTableScene.position, currentPiece, cuttingTable.transform.localPosition);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
 		yield return new WaitForSeconds(WaitBetweenScaleUp);
-		yield return cuttingTable.GetComponent<CuttingTable>().ScaleUp();
-		currentPiece.parent = cuttingTable;
+		cuttingTable.InitTable();
 	}
 
 	IEnumerator MovePieceToPicture()
 	{
 		yield return currentPiece.GetComponent<Piece>().ScaleDown();
-		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, currentPicture.position, currentPiece);
+		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, currentPicture.position, currentPiece, Vector2.zero);
 		currentPiece.parent = currentPicture;
 	}
 	

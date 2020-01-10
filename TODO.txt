@@ -3,3 +3,4 @@ color out piece
 grayscale shader
 buttons for each piece / level
 transition between pictures
+animating bg when all piece ready
