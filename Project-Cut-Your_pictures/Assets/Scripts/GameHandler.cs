@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameHandler : MonoBehaviour
 {
-	const float WaitBetweenScaleUp = .5f;
+	const float WaitBetweenScaleUp = .2f;
 
 	public Transform[] imagesToFocus;
 	int currentImageIndex = -1;
