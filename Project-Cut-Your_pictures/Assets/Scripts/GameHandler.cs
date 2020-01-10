@@ -32,10 +32,10 @@ public class GameHandler : MonoBehaviour
 			CameraController.instance.FocusImage(currentPiece.position, shouldUseZoom);
 		}
 
-		if (Input.GetKeyDown(KeyCode.LeftShift))
+		if (Input.GetKeyDown(KeyCode.A))
 			StartCoroutine(StartGameOnPiece());
 
-		if (Input.GetKeyDown(KeyCode.LeftControl))
+		if (Input.GetKeyDown(KeyCode.Y))
 			StartCoroutine(MovePieceToPicture());
 	}
 
@@ -52,6 +52,25 @@ public class GameHandler : MonoBehaviour
 		yield return currentPiece.GetComponent<Piece>().ScaleDown();
 		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, currentPicture.position, currentPiece, Vector2.zero);
 		currentPiece.parent = currentPicture;
+	}
+
+	bool clickedOnce = false;
+	public void ButtonClick()
+	{
+		if (!clickedOnce)
+		{
+			currentImageIndex = 1;
+
+			currentPicture = imagesToFocus[0];
+			currentPiece = imagesToFocus[currentImageIndex];
+			CameraController.instance.FocusImage(currentPiece.position, true);
+
+			clickedOnce = true;
+		}
+		else
+		{
+			StartCoroutine(StartGameOnPiece());
+		}
 	}
 	
 }

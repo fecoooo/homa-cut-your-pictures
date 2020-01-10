@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Template : MonoBehaviourSingleton<Template>
 {
+	const int PieceCutTolerance = 30;
+
 	public bool visualize;
 	readonly Color Alpha = new Color(0, 0, 0, 0);
 
@@ -18,6 +20,8 @@ public class Template : MonoBehaviourSingleton<Template>
 
 	int pixelsCut;
 	int minimumPixelToCut;
+
+	int pixelsCutFromPiece = 0;
 
 	SpriteRenderer spriteRenderer;
 	Texture2D currentTexture;
@@ -66,14 +70,17 @@ public class Template : MonoBehaviourSingleton<Template>
 		if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.black)
 			pixelsCut++;
 		else if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.magenta)
-			CuttingTable.instance.Fail();
+		{
+			pixelsCutFromPiece++;
+			if(pixelsCutFromPiece > PieceCutTolerance)
+				CuttingTable.instance.Fail();
+		}
 		else if (currentTexture.GetPixel(CutterTexturePosition.x, CutterTexturePosition.y) == Color.green)
 		{
 			Debug.Log(pixelsCut + "/" + minimumPixelToCut);
-			//Debug.Log(currentBlackPixels + "/" + initialBlackPixels);
 			CuttingTable.instance.EndedCircle(pixelsCut);
 		}
-			
+
 
 		currentTexture.SetPixel(CutterTexturePosition.x, CutterTexturePosition.y, Alpha);
 
@@ -96,6 +103,7 @@ public class Template : MonoBehaviourSingleton<Template>
 
 		//currentBlackPixels = initialBlackPixels;
 		this.minimumPixelToCut = minimumPixelToCut;
+		pixelsCutFromPiece = 0;
 		pixelsCut = 0;
 	}
 

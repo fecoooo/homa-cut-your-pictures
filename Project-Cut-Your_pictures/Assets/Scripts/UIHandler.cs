@@ -7,12 +7,14 @@ public class UIHandler : MonoBehaviour
 	TextMeshProUGUI freezeCountLbl;
 	Image progressBar;
 	TextMeshProUGUI progressLbl;
+	TextMeshProUGUI countDownLbl;
 
 	void Start()
     {
 		freezeCountLbl = transform.Find("Freeze/FreezeCountLbl").GetComponent<TextMeshProUGUI>();
 		progressBar = transform.Find("Progress/ProgressBar").GetComponent<Image>();
 		progressLbl = transform.Find("Progress/ProgressLbl").GetComponent<TextMeshProUGUI>();
+		countDownLbl = transform.Find("CountDownLbl").GetComponent<TextMeshProUGUI>();
 
 		Cutter.instance.FreezeCountChanged += OnFreezeCountChanged;
 	}

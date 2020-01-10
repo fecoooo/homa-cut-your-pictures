@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
@@ -25,8 +23,6 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		piece = transform.Find("Piece").GetComponent<SpriteRenderer>();
 
 		currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
-
-		//StartGame();
     }
 
 	public void Restart()
@@ -82,6 +78,8 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		yield return ScaleUp();
 		yield return new WaitForSeconds(TimeBetweenScaleUpAndUI);
 		CuttingUI.SetActive(true);
+
+		StartGame();
 	}
 
 	public IEnumerator ScaleUp()
