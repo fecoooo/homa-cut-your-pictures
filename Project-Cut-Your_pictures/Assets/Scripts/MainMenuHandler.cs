@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MainMenuHandler : MonoBehaviour
 {
-	public GameObject[] pictures;
-	int currentPictureIndex = 0;
+	public GameObject[] imagesToFocus;
+	int currentImageIndex = 0;
 
     void Start()
     {
@@ -17,8 +17,9 @@ public class MainMenuHandler : MonoBehaviour
     {
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			CameraController.instance.FocusImage(pictures[currentPictureIndex].transform.position);
-			currentPictureIndex++;
+			bool shouldUseZoom = currentImageIndex == 0 ? true : false;
+			CameraController.instance.FocusImage(imagesToFocus[currentImageIndex].transform.position, shouldUseZoom);
+			currentImageIndex++;
 		}
     }
 }

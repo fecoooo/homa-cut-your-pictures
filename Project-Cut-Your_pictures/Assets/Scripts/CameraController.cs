@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviourSingleton<CameraController>
 {
-	const float zoomedInCameraSize = 1.5f;
-	const float zoomedOutCameraSize = 5f;
+	const float zoomedInCameraSize = 7.5f;
+	const float zoomedOutCameraSize = 25f;
 	
 	public float focusAnimTime = .5f;
 	public float zoomAnimTime = .5f;
@@ -22,18 +22,20 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 		camera = GetComponent<Camera>();
 	}
 
-	public void FocusImage(Vector2 imageCenter)
+	public void FocusImage(Vector2 imageCenter, bool withZoomTransition)
 	{
-		StartCoroutine(FocusImageRoutine(imageCenter));
+		StartCoroutine(FocusImageRoutine(imageCenter, withZoomTransition));
 	}
 
-	IEnumerator FocusImageRoutine(Vector2 imageCenter)
+	IEnumerator FocusImageRoutine(Vector2 imageCenter, bool withZoomTransition)
 	{
-		if (IsZoomedIn)
+		if (withZoomTransition && IsZoomedIn)
 			yield return ZoomRoutine(ZoomType.Out);
 
 		yield return PositionOnImageCenterRoutine(imageCenter);
-		yield return ZoomRoutine(ZoomType.In);
+
+		if(withZoomTransition)
+			yield return ZoomRoutine(ZoomType.In);
 	}
 
 	IEnumerator PositionOnImageCenterRoutine(Vector2 imageCenter)
