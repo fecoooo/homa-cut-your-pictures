@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameHandler : MonoBehaviour
 {
+	const float WaitBetweenScaleUp = .5f;
+
 	public Transform[] imagesToFocus;
 	int currentImageIndex = -1;
 
@@ -11,8 +13,7 @@ public class GameHandler : MonoBehaviour
 	Transform currentPiece;
 	Transform currentPicture;
 
-
-    void Update()
+	void Update()
     {
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
@@ -25,20 +26,18 @@ public class GameHandler : MonoBehaviour
 		}
 
 		if (Input.GetKeyDown(KeyCode.LeftShift))
-		{
 			StartCoroutine(MovePieceToCuttingTable());
-		}
 
 		if (Input.GetKeyDown(KeyCode.LeftControl))
-		{
 			StartCoroutine(MovePieceToPicture());
-		}
 	}
 
 	IEnumerator MovePieceToCuttingTable()
 	{
 		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, cuttingTable.position, currentPiece);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
+		yield return new WaitForSeconds(WaitBetweenScaleUp);
+		yield return cuttingTable.GetComponent<CuttingTable>().ScaleUp();
 		currentPiece.parent = cuttingTable;
 	}
 

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 {
+	const float ScaleUpAnimTime = 0.3f;
+
 	public bool InGameCutting { get; private set; }
 	const float CountDownTime = 1f;
 
@@ -65,5 +67,22 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 			Debug.Log("You lose!");
 
 		InGameCutting = false;
+	}
+
+	public IEnumerator ScaleUp()
+	{
+		float timePassed = 0;
+
+		while (timePassed < ScaleUpAnimTime)
+		{
+			float t = timePassed / ScaleUpAnimTime;
+
+			transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, t);
+
+			timePassed += Time.deltaTime;
+			yield return null;
+		}
+
+		transform.localScale = Vector3.one;
 	}
 }
