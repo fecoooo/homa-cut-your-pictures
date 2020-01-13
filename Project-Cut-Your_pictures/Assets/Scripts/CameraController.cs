@@ -35,6 +35,7 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 	{
 		piece.parent = camera.transform;
 		float timePassed = 0;
+		Vector2 originalPiecePos = piece.localPosition;
 
 		while (timePassed < MovePieceAnimTime)
 		{
@@ -44,7 +45,7 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 			currentPosition.z = CameraZ;
 			transform.position = currentPosition;
 
-			Vector3 currentOffset = Vector3.Lerp(Vector2.zero, targetPiecePos, t);
+			Vector3 currentOffset = Vector3.Lerp(originalPiecePos, targetPiecePos, t);
 			currentOffset.z = piece.localPosition.z;
 			piece.localPosition = currentOffset;
 
