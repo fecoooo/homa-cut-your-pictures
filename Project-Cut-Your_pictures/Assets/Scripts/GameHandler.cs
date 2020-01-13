@@ -38,7 +38,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	void Update()
     {
 		if (Input.GetKeyDown(KeyCode.A))
-			StartCoroutine(StartGameOnPiece());
+			StartCoroutine(StartGameOnPieceRoutine());
 
 		if (Input.GetKeyDown(KeyCode.Y))
 			StartCoroutine(MovePieceToPicture());
@@ -64,9 +64,14 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		yield return CameraController.instance.FocusImageRoutine(currentPicture.position, true);
 	}
 
-	IEnumerator StartGameOnPiece()
+	public void StartGameOnPiece()
 	{
-		yield return CameraController.instance.FocusImageRoutine(currentPiece.transform.position, true);
+		StartCoroutine(StartGameOnPieceRoutine());
+	}
+
+	IEnumerator StartGameOnPieceRoutine()
+	{
+		yield return CameraController.instance.FocusImageRoutine(currentPiece.transform.position, false);
 		yield return CameraController.instance.MovePieceRoutine(currentPiece.transform.position, cuttingTableScene.position, 
 			currentPiece.transform, cuttingTable.transform.localPosition);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
