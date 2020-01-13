@@ -1,9 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameHandler : MonoBehaviour
+public class GameHandler : MonoBehaviourSingleton<GameHandler>
 {
+	public delegate void GameStateChangeHandler(GameState state);
+	public event GameStateChangeHandler GameStateChanged;
+
 	const float WaitBetweenScaleUp = .2f;
 
 	public Transform[] imagesToFocus;
@@ -15,9 +19,16 @@ public class GameHandler : MonoBehaviour
 	Transform currentPiece;
 	Transform currentPicture;
 
+	protected override void OnAwake()
+	{
+		base.OnAwake();
+		GameStateChanged += OnGameStateChanged;
+	}
+	
 	void Start()
 	{
 		cuttingTable = cuttingTableScene.Find("CuttingTable").GetComponent<CuttingTable>();
+		GameStateChanged(GameState.Start);
 	}
 
 	void Update()
@@ -44,7 +55,20 @@ public class GameHandler : MonoBehaviour
 		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, cuttingTableScene.position, currentPiece, cuttingTable.transform.localPosition);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
 		yield return new WaitForSeconds(WaitBetweenScaleUp);
-		cuttingTable.InitTable();
+
+		float tableAnimTime = cuttingTable.InitTable();
+		ChangeGameStateDelayed(tableAnimTime, GameState.InGame);
+	}
+
+	void ChangeGameStateDelayed(float delay, GameState state)
+	{
+		StartCoroutine(ChangeGameStateDelayedRoutine(delay, state));
+	}
+
+	IEnumerator ChangeGameStateDelayedRoutine(float delay, GameState state)
+	{
+		yield return new WaitForSeconds(delay);
+		GameStateChanged(state);
 	}
 
 	IEnumerator MovePieceToPicture()
@@ -71,6 +95,28 @@ public class GameHandler : MonoBehaviour
 		{
 			StartCoroutine(StartGameOnPiece());
 		}
+	}
+
+	private void OnGameStateChanged(GameState state)
+	{
+		switch (state)
+		{
+			case GameState.Start:
+				break;
+			case GameState.MainMenu:
+				break;
+			case GameState.InGame:
+				break;
+			default:
+				break;
+		}
+	}
+
+	public enum GameState
+	{
+		Start,
+		MainMenu,
+		InGame
 	}
 	
 }

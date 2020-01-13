@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
+using static GameHandler;
 
 public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 {
-	const float ScaleUpAnimTime = 0.3f;
+	const float ScaleUpAnimTime = .3f;
 	const float CountDownTime = 1f;
 	const float TimeBetweenScaleUpAndUI = .3f;
 
@@ -23,7 +24,25 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		piece = transform.Find("Piece").GetComponent<SpriteRenderer>();
 
 		currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
+
+		GameHandler.instance.GameStateChanged += OnGameStateChanged;
     }
+
+	private void OnGameStateChanged(GameState state)
+	{
+		switch (state)
+		{
+			case GameState.Start:
+				transform.localScale = Vector3.zero;
+				break;
+			case GameState.MainMenu:
+				break;
+			case GameState.InGame:
+				break;
+			default:
+				break;
+		}
+	}
 
 	public void Restart()
 	{
@@ -68,16 +87,16 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		InGameCutting = false;
 	}
 
-	public void InitTable()
+	public float InitTable()
 	{
 		StartCoroutine(InitTableRoutine());
+		return ScaleUpAnimTime;
 	}
 
 	IEnumerator InitTableRoutine()
 	{
 		yield return ScaleUp();
 		yield return new WaitForSeconds(TimeBetweenScaleUpAndUI);
-		CuttingUI.SetActive(true);
 
 		StartGame();
 	}

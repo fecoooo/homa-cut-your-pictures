@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GameHandler;
 
 public class Cutter : MonoBehaviourSingleton<Cutter>
 {
@@ -27,11 +28,31 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 	float lastVibrate = VibrateCycleTime;
 
 	Bounds cuttingArea;
+	Transform directionChild;
 
 	void Start()
 	{
 		FreezeCountChanged += OnFreezeCountChanged;
 		cuttingArea = GameObject.Find("CuttingTable").GetComponent<BoxCollider2D>().bounds;
+		directionChild = transform.Find("Direction");
+
+		GameHandler.instance.GameStateChanged += OnGameStateChanged;
+	}
+
+	private void OnGameStateChanged(GameState state)
+	{
+		switch (state)
+		{
+			case GameState.Start:
+				SetVisualsEnabled(false);
+				break;
+			case GameState.MainMenu:
+				break;
+			case GameState.InGame:
+				break;
+			default:
+				break;
+		}
 	}
 
 	void Update()
@@ -70,8 +91,16 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 		FreezeCount = currentLevelData.freezeCount;
 		transform.localPosition = currentLevelData.startingPosition;
 		transform.eulerAngles = new Vector3(0, 0, currentLevelData.startingRotation);
-		
+
+		SetVisualsEnabled(true);
+
 		FreezeCountChanged(FreezeCount);
+	}
+
+	void SetVisualsEnabled(bool enabled)
+	{
+		GetComponent<SpriteRenderer>().enabled = enabled;
+		directionChild.GetComponent<SpriteRenderer>().enabled = enabled;		
 	}
 
 	private void Move()
@@ -80,7 +109,7 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 
 		if(lastVibrate >= VibrateCycleTime)
 		{
-			Handheld.Vibrate();
+			//Handheld.Vibrate();
 			lastVibrate = 0;
 		}
 
