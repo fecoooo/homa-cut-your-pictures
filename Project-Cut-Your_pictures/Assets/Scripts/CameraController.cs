@@ -61,7 +61,7 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 		StartCoroutine(FocusImageRoutine(imageCenter, withZoomTransition));
 	}
 
-	IEnumerator FocusImageRoutine(Vector2 imageCenter, bool withZoomTransition)
+	public IEnumerator FocusImageRoutine(Vector2 imageCenter, bool withZoomTransition)
 	{
 		if (withZoomTransition && IsZoomedIn)
 			yield return ZoomRoutine(ZoomType.Out);

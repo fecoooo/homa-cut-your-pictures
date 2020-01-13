@@ -10,7 +10,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 	const float TimeInBeforeGameState = .5f;
 
-	public Transform[] imagesToFocus;
+	public Transform[] pictures;
+	public Transform[] pieces;
 	int currentImageIndex = -1;
 
 	public Transform cuttingTableScene;
@@ -18,6 +19,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	CuttingTable cuttingTable;
 	Transform currentPiece;
 	Transform currentPicture;
+
+	int currentLevelIndex;
 
 	protected override void OnAwake()
 	{
@@ -27,6 +30,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	
 	void Start()
 	{
+		currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
 		cuttingTable = cuttingTableScene.Find("CuttingTable").GetComponent<CuttingTable>();
 		GameStateChanged(GameState.Start);
 	}
@@ -38,8 +42,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 			currentImageIndex++;
 			bool shouldUseZoom = currentImageIndex == 0 ? true : false;
 
-			currentPicture = imagesToFocus[0];
-			currentPiece = imagesToFocus[currentImageIndex];
+			currentPicture = pieces[0];
+			currentPiece = pieces[currentImageIndex];
 			CameraController.instance.FocusImage(currentPiece.position, shouldUseZoom);
 		}
 
@@ -48,6 +52,18 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 		if (Input.GetKeyDown(KeyCode.Y))
 			StartCoroutine(MovePieceToPicture());
+	}
+
+	public void FocusCurrentPiece() 
+	{
+		StartCoroutine(FocusCurrentPieceRoutine());
+	}
+
+	IEnumerator FocusCurrentPieceRoutine()
+	{
+		currentPiece = pieces[currentLevelIndex];
+		Transform currentPicture = currentPiece.parent;
+		yield return CameraController.instance.FocusImageRoutine(currentPicture.position, true);
 	}
 
 	IEnumerator StartGameOnPiece()
@@ -77,25 +93,6 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		currentPiece.parent = currentPicture;
 	}
 
-	bool clickedOnce = false;
-	public void ButtonClick()
-	{
-		if (!clickedOnce)
-		{
-			currentImageIndex = 1;
-
-			currentPicture = imagesToFocus[0];
-			currentPiece = imagesToFocus[currentImageIndex];
-			CameraController.instance.FocusImage(currentPiece.position, true);
-
-			clickedOnce = true;
-		}
-		else
-		{
-			StartCoroutine(StartGameOnPiece());
-		}
-	}
-
 	private void OnGameStateChanged(GameState state)
 	{
 		switch (state)
@@ -118,5 +115,4 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		BeforeGame,
 		InGame,
 	}
-	
 }
