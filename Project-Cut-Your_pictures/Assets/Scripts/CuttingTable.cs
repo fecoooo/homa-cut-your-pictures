@@ -4,8 +4,8 @@ using static GameHandler;
 
 public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 {
+	public const float CountDownTime = 4f;
 	const float ScaleUpAnimTime = .3f;
-	const float CountDownTime = 1f;
 	const float TimeBetweenScaleUpAndUI = .3f;
 
 	public GameObject CuttingUI;

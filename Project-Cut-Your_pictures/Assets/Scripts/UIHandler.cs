@@ -1,15 +1,17 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameHandler;
 
-public class UIHandler : MonoBehaviour
+public class UIHandler:MonoBehaviour
 {
 	TextMeshProUGUI freezeCountLbl;
 	Image progressBar;
 	TextMeshProUGUI progressLbl;
 	TextMeshProUGUI countDownLbl;
 	Canvas canvas;
+	string[] countDownTexts = { "3", "2", "1", "Start"};
 
 	void Start()
     {
@@ -53,9 +55,33 @@ public class UIHandler : MonoBehaviour
 				break;
 			case GameState.InGame:
 				canvas.enabled = true;
+				CountDown();
 				break;
 			default:
 				break;
 		}
+	}
+
+	void CountDown()
+	{
+		StartCoroutine(CountDownRoutine());
+	}
+
+	IEnumerator CountDownRoutine()
+	{
+		countDownLbl.gameObject.SetActive(true);
+
+		float timePassed = 0;
+		while (timePassed < CuttingTable.CountDownTime)
+		{
+			float t = timePassed / CuttingTable.CountDownTime;
+			int textIndex = Mathf.FloorToInt(t * countDownTexts.Length);
+			countDownLbl.text = countDownTexts[textIndex];
+
+			timePassed += Time.deltaTime;
+			yield return null;
+		}
+
+		countDownLbl.gameObject.SetActive(false);
 	}
 }
