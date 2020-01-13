@@ -17,8 +17,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	public Transform cuttingTableScene;
 
 	CuttingTable cuttingTable;
-	Transform currentPiece;
 	Transform currentPicture;
+	Piece currentPiece;
 
 	int currentLevelIndex;
 
@@ -43,8 +43,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 			bool shouldUseZoom = currentImageIndex == 0 ? true : false;
 
 			currentPicture = pieces[0];
-			currentPiece = pieces[currentImageIndex];
-			CameraController.instance.FocusImage(currentPiece.position, shouldUseZoom);
+			currentPiece = pieces[currentImageIndex].GetComponent<Piece>();
+			CameraController.instance.FocusImage(currentPiece.transform.position, shouldUseZoom);
 		}
 
 		if (Input.GetKeyDown(KeyCode.A))
@@ -61,14 +61,15 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 	IEnumerator FocusCurrentPieceRoutine()
 	{
-		currentPiece = pieces[currentLevelIndex];
-		Transform currentPicture = currentPiece.parent;
+		currentPiece = pieces[currentLevelIndex].GetComponent<Piece>();
+		Transform currentPicture = currentPiece.transform.parent;
 		yield return CameraController.instance.FocusImageRoutine(currentPicture.position, true);
 	}
 
 	IEnumerator StartGameOnPiece()
 	{
-		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, cuttingTableScene.position, currentPiece, cuttingTable.transform.localPosition);
+		yield return CameraController.instance.MovePieceRoutine(currentPiece.transform.position, cuttingTableScene.position, 
+			currentPiece.transform, cuttingTable.transform.localPosition);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
 
 		GameStateChanged(GameState.BeforeGame);
@@ -89,8 +90,9 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	IEnumerator MovePieceToPicture()
 	{
 		yield return currentPiece.GetComponent<Piece>().ScaleDown();
-		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, currentPicture.position, currentPiece, Vector2.zero);
-		currentPiece.parent = currentPicture;
+		yield return CameraController.instance.MovePieceRoutine(currentPiece.transform.position, currentPicture.position, 
+			currentPiece.transform, Vector2.zero);
+		currentPiece.transform.parent = currentPicture;
 	}
 
 	private void OnGameStateChanged(GameState state)

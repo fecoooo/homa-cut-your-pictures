@@ -48,4 +48,13 @@ public class Piece : MonoBehaviour
 
 		transform.localScale = originalScale;
 	}
+
+	public void SetGreyEnabled(bool enabled)
+	{
+		if (enabled)
+			GetComponent<SpriteRenderer>().material.shader = Shader.Find("GreyScale");
+		else
+			GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
+
+	}
 }
