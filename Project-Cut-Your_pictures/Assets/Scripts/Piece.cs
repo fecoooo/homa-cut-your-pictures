@@ -6,16 +6,32 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
 	const float ScaleUpAnimTime = 0.3f;
+	const int SelectedSortingOrder = 100;
 
-	Vector3 originalScale;
+	Vector3 menuScale;
+	Transform parentPicture;
+	int menuSortingOrder;
+	public Vector2 MenuLocalPosition { get; private set; }
+
 	readonly Vector3 scaledUpScale = new Vector3(1,1,1);
 	Outline outline;
-	bool hasOutline;
+	bool isSelected;
+	SpriteRenderer spriteRenderer;
 
     void Start()
     {
-		originalScale = transform.localScale;
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		menuScale = transform.localScale;
+		MenuLocalPosition = transform.localPosition;
+		parentPicture = transform.parent;
+		menuSortingOrder = spriteRenderer.sortingOrder;
 		outline = GetComponent<Outline>();
+	}
+
+	public void PrepareForMove()
+	{
+		spriteRenderer.sortingOrder = SelectedSortingOrder;
+		SetSelected(false);
 	}
 
 	public IEnumerator ScaleUp()
@@ -26,7 +42,7 @@ public class Piece : MonoBehaviour
 		{
 			float t = timePassed / ScaleUpAnimTime;
 
-			transform.localScale = Vector3.Lerp(originalScale, scaledUpScale, t);
+			transform.localScale = Vector3.Lerp(menuScale, scaledUpScale, t);
 
 			timePassed += Time.deltaTime;
 			yield return null;
@@ -43,35 +59,39 @@ public class Piece : MonoBehaviour
 		{
 			float t = timePassed / ScaleUpAnimTime;
 
-			transform.localScale = Vector3.Lerp(scaledUpScale, originalScale, t);
+			transform.localScale = Vector3.Lerp(scaledUpScale, menuScale, t);
 
 			timePassed += Time.deltaTime;
 			yield return null;
 		}
 
-		transform.localScale = originalScale;
+		transform.localScale = menuScale;
 	}
 
-	public void SetGreyEnabled(bool enabled)
+	public void SetCompleted(bool completed)
 	{
-		if (enabled)
-			GetComponent<SpriteRenderer>().material = GamePrefs.instance.originalMat;
+		if (completed)
+			spriteRenderer.material = GamePrefs.instance.originalMat;
 		else
-			GetComponent<SpriteRenderer>().material = GamePrefs.instance.greyScaleMat;
+			spriteRenderer.material = GamePrefs.instance.greyScaleMat;
 	}
 
-	public void SetHasOutline(bool hasOutline)
+	public void SetSelected(bool isSelected)
 	{
-		if(this.hasOutline == hasOutline)
+		if(this.isSelected == isSelected)
 			return;
 
-		this.hasOutline = hasOutline;
+		this.isSelected = isSelected;
 
-		if (hasOutline)
+		if (isSelected)
 			OutlineEffect.Instance?.AddOutline(outline);
 		else
 			OutlineEffect.Instance?.RemoveOutline(outline);
+	}
 
-		
+	public void ResetOnMenu()
+	{
+		transform.parent = parentPicture;
+		spriteRenderer.sortingOrder = menuSortingOrder;
 	}
 }

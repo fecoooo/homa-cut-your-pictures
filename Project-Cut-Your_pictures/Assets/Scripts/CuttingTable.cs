@@ -31,10 +31,8 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 	{
 		switch (state)
 		{
-			case GameState.Start:
+			case GameState.TransferringPiece:
 				transform.localScale = Vector3.zero;
-				break;
-			case GameState.MainMenuZoomOut:
 				break;
 			case GameState.BeforeGame:
 				InitTable();

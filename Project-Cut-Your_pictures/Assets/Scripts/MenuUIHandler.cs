@@ -29,11 +29,12 @@ public class MenuUIHandler:MonoBehaviour
 				zoomedButtons.gameObject.SetActive(false);
 				break;
 			case GameState.MainMenuZoomOut:
+				canvas.enabled = true;
 				playCurrentPiece.gameObject.SetActive(true);
 				zoomedButtons.gameObject.SetActive(false);
-				canvas.enabled = true;
 				break;
 			case GameState.MainMenuZoomIn:
+				canvas.enabled = true;
 				playCurrentPiece.gameObject.SetActive(false);
 				zoomedButtons.gameObject.SetActive(true);
 				break;

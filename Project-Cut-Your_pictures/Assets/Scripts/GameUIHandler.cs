@@ -57,6 +57,9 @@ public class GameUIHandler:MonoBehaviour
 				canvas.enabled = true;
 				CountDown();
 				break;
+			case GameState.TransferringPiece:
+				canvas.enabled = false;
+				break;
 			default:
 				break;
 		}

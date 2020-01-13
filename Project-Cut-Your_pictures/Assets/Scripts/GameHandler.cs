@@ -30,25 +30,17 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	void Start()
 	{
 		currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
+		SetPiecesCompleteState();
+
 		cuttingTable = cuttingTableScene.Find("CuttingTable").GetComponent<CuttingTable>();
 		GameStateChanged(GameState.Start);
-	}
-
-
-	void Update()
-    {
-		if (Input.GetKeyDown(KeyCode.A))
-			StartCoroutine(StartGameOnPieceRoutine());
-
-		if (Input.GetKeyDown(KeyCode.Y))
-			StartCoroutine(MovePieceToPicture());
 	}
 
 	public void SelectPiece(int index)
 	{
 		currentPiece = pieces[index];
 		for(int i = 0; i < pieces.Length; ++i)
-			pieces[i].SetHasOutline(i == index);
+			pieces[i].SetSelected(i == index);
 	}
 
 	public void FocusCurrentPiece() 
@@ -71,7 +63,11 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 	IEnumerator StartGameOnPieceRoutine()
 	{
+		GameStateChanged(GameState.TransferringPiece);
 		yield return CameraController.instance.FocusImageRoutine(currentPiece.transform.position, false);
+
+		currentPiece.PrepareForMove();
+		
 		yield return CameraController.instance.MovePieceRoutine(currentPiece.transform.position, cuttingTableScene.position, 
 			currentPiece.transform, cuttingTable.transform.localPosition);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
@@ -91,27 +87,32 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		GameStateChanged(state);
 	}
 
-	IEnumerator MovePieceToPicture()
+	public void MovePieceToPicture()
 	{
+		StartCoroutine(MovePieceToPictureRoutine());
+	}
+
+	IEnumerator MovePieceToPictureRoutine()
+	{
+		GameStateChanged(GameState.TransferringPiece);
 		yield return currentPiece.GetComponent<Piece>().ScaleDown();
 		yield return CameraController.instance.MovePieceRoutine(currentPiece.transform.position, currentPicture.position, 
-			currentPiece.transform, Vector2.zero);
-		currentPiece.transform.parent = currentPicture;
+			currentPiece.transform, currentPiece.MenuLocalPosition);
+
+		currentPiece.ResetOnMenu();
+
+		GameStateChanged(GameState.MainMenuZoomIn);
 	}
 
 	private void OnGameStateChanged(GameState state)
 	{
-		switch (state)
-		{
-			case GameState.Start:
-				break;
-			case GameState.MainMenuZoomOut:
-				break;
-			case GameState.InGame:
-				break;
-			default:
-				break;
-		}
+		//dummy
+	}
+
+	void SetPiecesCompleteState()
+	{
+		for(int i = 0; i < pieces.Length; ++i)
+			pieces[i].SetCompleted(i <= currentLevelIndex);
 	}
 
 	public enum GameState
@@ -119,6 +120,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		Start,
 		MainMenuZoomOut,
 		MainMenuZoomIn,
+		TransferringPiece,
 		BeforeGame,
 		InGame,
 	}
