@@ -11,8 +11,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	const float TimeInBeforeGameState = .5f;
 
 	public Transform[] pictures;
-	public Transform[] pieces;
-	int currentImageIndex = -1;
+	public Piece[] pieces;
 
 	public Transform cuttingTableScene;
 
@@ -36,30 +35,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	}
 
 
-	bool a;
-	bool b;
 	void Update()
     {
-		if (Input.GetKeyDown(KeyCode.P))
-		{
-			a = !a;
-			currentPiece.SetOutlineActive(a);
-		}
-		if (Input.GetKeyDown(KeyCode.O))
-		{
-			b = !b;
-			currentPiece.SetGreyEnabled(b);
-		}
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			currentImageIndex++;
-			bool shouldUseZoom = currentImageIndex == 0 ? true : false;
-
-			currentPicture = pieces[0];
-			currentPiece = pieces[currentImageIndex].GetComponent<Piece>();
-			CameraController.instance.FocusImage(currentPiece.transform.position, shouldUseZoom);
-		}
-
 		if (Input.GetKeyDown(KeyCode.A))
 			StartCoroutine(StartGameOnPiece());
 
@@ -67,20 +44,29 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 			StartCoroutine(MovePieceToPicture());
 	}
 
+	public void SelectPiece(int index)
+	{
+		currentPiece = pieces[index];
+		for(int i = 0; i < pieces.Length; ++i)
+			pieces[i].SetHasOutline(i == index);
+	}
+
 	public void FocusCurrentPiece() 
 	{
+		GameStateChanged(GameState.MainMenuZoomIn);
 		StartCoroutine(FocusCurrentPieceRoutine());
 	}
 
 	IEnumerator FocusCurrentPieceRoutine()
 	{
 		currentPiece = pieces[currentLevelIndex].GetComponent<Piece>();
-		Transform currentPicture = currentPiece.transform.parent;
+		currentPicture = currentPiece.transform.parent;
 		yield return CameraController.instance.FocusImageRoutine(currentPicture.position, true);
 	}
 
 	IEnumerator StartGameOnPiece()
 	{
+		yield return CameraController.instance.FocusImageRoutine(currentPiece.transform.position, true);
 		yield return CameraController.instance.MovePieceRoutine(currentPiece.transform.position, cuttingTableScene.position, 
 			currentPiece.transform, cuttingTable.transform.localPosition);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
@@ -114,7 +100,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		{
 			case GameState.Start:
 				break;
-			case GameState.MainMenu:
+			case GameState.MainMenuZoomOut:
 				break;
 			case GameState.InGame:
 				break;
@@ -126,7 +112,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	public enum GameState
 	{
 		Start,
-		MainMenu,
+		MainMenuZoomOut,
+		MainMenuZoomIn,
 		BeforeGame,
 		InGame,
 	}

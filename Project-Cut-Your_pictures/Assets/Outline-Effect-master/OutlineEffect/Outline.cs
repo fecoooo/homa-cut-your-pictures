@@ -45,14 +45,6 @@ namespace cakeslice
             MeshFilter = GetComponent<MeshFilter>();
         }
 
-        void OnEnable()
-        {
-        }
-
-        void OnDisable()
-        {
-        }
-
         private Material[] _SharedMaterials;
         public Material[] SharedMaterials
         {

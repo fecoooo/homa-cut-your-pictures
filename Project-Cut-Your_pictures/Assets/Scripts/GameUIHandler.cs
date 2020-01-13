@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GameHandler;
 
-public class UIHandler:MonoBehaviour
+public class GameUIHandler:MonoBehaviour
 {
 	TextMeshProUGUI freezeCountLbl;
 	Image progressBar;
@@ -50,7 +50,7 @@ public class UIHandler:MonoBehaviour
 			case GameState.Start:
 				canvas.enabled = false;
 				break;
-			case GameState.MainMenu:
+			case GameState.MainMenuZoomOut:
 				canvas.enabled = false;
 				break;
 			case GameState.InGame:

@@ -10,6 +10,7 @@ public class Piece : MonoBehaviour
 	Vector3 originalScale;
 	readonly Vector3 scaledUpScale = new Vector3(1,1,1);
 	Outline outline;
+	bool hasOutline;
 
     void Start()
     {
@@ -59,11 +60,18 @@ public class Piece : MonoBehaviour
 			GetComponent<SpriteRenderer>().material = GamePrefs.instance.greyScaleMat;
 	}
 
-	public void SetOutlineActive(bool isActive)
+	public void SetHasOutline(bool hasOutline)
 	{
-		if(isActive)
+		if(this.hasOutline == hasOutline)
+			return;
+
+		this.hasOutline = hasOutline;
+
+		if (hasOutline)
 			OutlineEffect.Instance?.AddOutline(outline);
 		else
 			OutlineEffect.Instance?.RemoveOutline(outline);
+
+		
 	}
 }

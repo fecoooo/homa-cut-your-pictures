@@ -46,7 +46,7 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 			case GameState.Start:
 				SetVisualsEnabled(false);
 				break;
-			case GameState.MainMenu:
+			case GameState.MainMenuZoomOut:
 				break;
 			case GameState.InGame:
 				break;
