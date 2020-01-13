@@ -35,8 +35,21 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		GameStateChanged(GameState.Start);
 	}
 
+
+	bool a;
+	bool b;
 	void Update()
     {
+		if (Input.GetKeyDown(KeyCode.P))
+		{
+			a = !a;
+			currentPiece.SetOutlineActive(a);
+		}
+		if (Input.GetKeyDown(KeyCode.O))
+		{
+			b = !b;
+			currentPiece.SetGreyEnabled(b);
+		}
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			currentImageIndex++;

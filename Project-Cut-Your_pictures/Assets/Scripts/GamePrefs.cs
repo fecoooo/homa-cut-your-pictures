@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GamePrefs : MonoBehaviourSingleton<GamePrefs>
 {
+	public Material originalMat;
+	public Material greyScaleMat;
+
 	public readonly LevelData[] LevelDatas = 
 	{
 		new LevelData(4, new Vector2(0.012f, -2.606f),	-80, "Levels/template_3", "Levels/piece_3", 1600),

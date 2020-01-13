@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using cakeslice;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,11 +9,12 @@ public class Piece : MonoBehaviour
 
 	Vector3 originalScale;
 	readonly Vector3 scaledUpScale = new Vector3(1,1,1);
+	Outline outline;
 
     void Start()
     {
 		originalScale = transform.localScale;
-
+		outline = GetComponent<Outline>();
 	}
 
 	public IEnumerator ScaleUp()
@@ -52,9 +54,16 @@ public class Piece : MonoBehaviour
 	public void SetGreyEnabled(bool enabled)
 	{
 		if (enabled)
-			GetComponent<SpriteRenderer>().material.shader = Shader.Find("GreyScale");
+			GetComponent<SpriteRenderer>().material = GamePrefs.instance.originalMat;
 		else
-			GetComponent<SpriteRenderer>().material.shader = Shader.Find("Sprites/Default");
+			GetComponent<SpriteRenderer>().material = GamePrefs.instance.greyScaleMat;
+	}
 
+	public void SetOutlineActive(bool isActive)
+	{
+		if(isActive)
+			OutlineEffect.Instance?.AddOutline(outline);
+		else
+			OutlineEffect.Instance?.RemoveOutline(outline);
 	}
 }

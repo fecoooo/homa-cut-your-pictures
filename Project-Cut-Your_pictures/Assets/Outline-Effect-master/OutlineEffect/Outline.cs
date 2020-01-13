@@ -47,12 +47,10 @@ namespace cakeslice
 
         void OnEnable()
         {
-            OutlineEffect.Instance?.AddOutline(this);
         }
 
         void OnDisable()
         {
-            OutlineEffect.Instance?.RemoveOutline(this);
         }
 
         private Material[] _SharedMaterials;
