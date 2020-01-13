@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 	const float ZoomedInCameraSize = 5f;
 	const float ZoomedOutCameraSize = 16.6666666f;
 
-	const float MovePieceAnimTime = 1f;
+	const float MovePieceAnimTime = 2f;
 
 	const float FocusAnimTime = 0.5f;
 	const float ZoomAnimTime = 0.5f;

@@ -8,7 +8,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	public delegate void GameStateChangeHandler(GameState state);
 	public event GameStateChangeHandler GameStateChanged;
 
-	const float WaitBetweenScaleUp = .2f;
+	const float TimeInBeforeGameState = .5f;
 
 	public Transform[] imagesToFocus;
 	int currentImageIndex = -1;
@@ -54,10 +54,9 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	{
 		yield return CameraController.instance.MovePieceRoutine(currentPiece.position, cuttingTableScene.position, currentPiece, cuttingTable.transform.localPosition);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
-		yield return new WaitForSeconds(WaitBetweenScaleUp);
 
-		float tableAnimTime = cuttingTable.InitTable();
-		ChangeGameStateDelayed(tableAnimTime, GameState.InGame);
+		GameStateChanged(GameState.BeforeGame);
+		ChangeGameStateDelayed(TimeInBeforeGameState, GameState.InGame);
 	}
 
 	void ChangeGameStateDelayed(float delay, GameState state)
@@ -116,7 +115,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	{
 		Start,
 		MainMenu,
-		InGame
+		BeforeGame,
+		InGame,
 	}
 	
 }

@@ -6,7 +6,6 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 {
 	public const float CountDownTime = 4f;
 	const float ScaleUpAnimTime = .3f;
-	const float TimeBetweenScaleUpAndUI = .3f;
 
 	public GameObject CuttingUI;
 
@@ -37,7 +36,11 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 				break;
 			case GameState.MainMenu:
 				break;
+			case GameState.BeforeGame:
+				InitTable();
+				break;
 			case GameState.InGame:
+				StartGame();
 				break;
 			default:
 				break;
@@ -96,9 +99,6 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 	IEnumerator InitTableRoutine()
 	{
 		yield return ScaleUp();
-		yield return new WaitForSeconds(TimeBetweenScaleUpAndUI);
-
-		StartGame();
 	}
 
 	public IEnumerator ScaleUp()
