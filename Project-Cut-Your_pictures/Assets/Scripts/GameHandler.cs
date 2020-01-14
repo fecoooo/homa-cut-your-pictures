@@ -20,6 +20,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		get => lastFinishedPiece + 1;
 	}
 
+	public int CurrentSelectedPiece { get; private set; }
+
 	GameState currentState;
 
 	CuttingTable cuttingTable;
@@ -39,6 +41,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	void Start()
 	{
 		lastFinishedPiece = PlayerPrefs.GetInt("LastFinishedPiece", -1);
+		CurrentSelectedPiece = CurrentExcercise;
 		SetPiecesCompleteState();
 
 		cuttingTable = cuttingTableScene.Find("CuttingTable").GetComponent<CuttingTable>();
@@ -47,27 +50,34 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 	public void SelectPiece(int index)
 	{
-		currentPiece = pieces[index];
+		CurrentSelectedPiece = index;
+
+		currentPiece = pieces[CurrentSelectedPiece];
+
 		for(int i = 0; i < pieces.Length; ++i)
-			pieces[i].SetSelected(i == index);
+			pieces[i].SetSelected(i == CurrentSelectedPiece);
 	}
 
 	public void FocusCurrentPiece() 
 	{
+		if (CurrentExcercise > 4)
+		{
+			lastFinishedPiece = -1;
+			PlayerPrefs.SetInt("LastFinishedPiece", lastFinishedPiece);
+			SetPiecesCompleteState();
+		}
+
 		GameStateChanged(GameState.MainMenuZoomIn);
 		StartCoroutine(FocusCurrentPieceRoutine());
 	}
 
 	IEnumerator FocusCurrentPieceRoutine()
 	{
-		if (CurrentExcercise <= 4)
-		{
-			currentPiece = pieces[CurrentExcercise].GetComponent<Piece>();
-			currentPicture = currentPiece.transform.parent;
-			yield return CameraController.instance.FocusImageRoutine(currentPicture.position, true);
-			MenuUIHandler.instance.SetDisabled(CurrentExcercise + 1);
-			MenuUIHandler.instance.ClickToggle(CurrentExcercise);
-		}
+		currentPiece = pieces[CurrentExcercise].GetComponent<Piece>();
+		currentPicture = currentPiece.transform.parent;
+		yield return CameraController.instance.FocusImageRoutine(currentPicture.position, true);
+		MenuUIHandler.instance.SetDisabled(CurrentExcercise + 1);
+		MenuUIHandler.instance.ClickToggle(CurrentExcercise);
 	}
 
 	public void StartGameOnPiece()
@@ -127,7 +137,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 		currentPiece.ResetOnMenu();
 
-		if (CuttingTable.instance.WonLast)
+		if (CuttingTable.instance.WonLast && CurrentSelectedPiece == CurrentExcercise)
 			StartWinAnimation();
 		else
 			GameStateChanged(GameState.MainMenuZoomIn);

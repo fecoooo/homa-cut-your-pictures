@@ -70,7 +70,9 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 
 	void LoadLevel()
 	{
-		currentLevelData = GamePrefs.instance.LevelDatas[GameHandler.instance.CurrentExcercise];
+		currentLevelData = GamePrefs.instance.LevelDatas[GameHandler.instance.CurrentSelectedPiece];
+
+		Cutter.instance.Init(currentLevelData);
 		
 		template.Init(currentLevelData.templatePath, currentLevelData.minimumPixelToCut);
 		piece.sprite = Resources.Load<Sprite>(currentLevelData.piecePath);
