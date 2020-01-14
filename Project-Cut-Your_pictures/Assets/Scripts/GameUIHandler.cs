@@ -10,6 +10,7 @@ public class GameUIHandler:MonoBehaviour
 	Image progressBar;
 	TextMeshProUGUI progressLbl;
 	TextMeshProUGUI countDownLbl;
+	TextMeshProUGUI middleMsgLbl;
 	Canvas canvas;
 	string[] countDownTexts = { "3", "2", "1", "Start"};
 
@@ -21,6 +22,7 @@ public class GameUIHandler:MonoBehaviour
 		progressBar = transform.Find("Progress/ProgressBar").GetComponent<Image>();
 		progressLbl = transform.Find("Progress/ProgressLbl").GetComponent<TextMeshProUGUI>();
 		countDownLbl = transform.Find("CountDownLbl").GetComponent<TextMeshProUGUI>();
+		middleMsgLbl = transform.Find("MiddleMsgLbl").GetComponent<TextMeshProUGUI>();
 
 		Cutter.instance.FreezeCountChanged += OnFreezeCountChanged;
 		GameHandler.instance.GameStateChanged += OnGameStateChanged;
@@ -58,7 +60,16 @@ public class GameUIHandler:MonoBehaviour
 				CountDown();
 				break;
 			case GameState.TransferringPiece:
+				middleMsgLbl.gameObject.SetActive(false);
 				canvas.enabled = false;
+				break;
+			case GameState.GameWon:
+				middleMsgLbl.gameObject.SetActive(true);
+				middleMsgLbl.text = "You won!";
+				break;
+			case GameState.GameLost:
+				middleMsgLbl.gameObject.SetActive(true);
+				middleMsgLbl.text = "You lose! :(";
 				break;
 			default:
 				break;

@@ -105,6 +105,9 @@ public class Template : MonoBehaviourSingleton<Template>
 		this.minimumPixelToCut = minimumPixelToCut;
 		pixelsCutFromPiece = 0;
 		pixelsCut = 0;
+
+		if (visualize)
+			Visualize();
 	}
 
 	void Visualize()

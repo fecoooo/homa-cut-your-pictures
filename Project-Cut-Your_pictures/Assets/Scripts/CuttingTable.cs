@@ -10,11 +10,11 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 	public GameObject CuttingUI;
 
 	public bool InGameCutting { get; private set; }
+	public bool WonLast { get; private set; }
 
 	Template template;
 	SpriteRenderer piece;
 	SpriteRenderer outline;
-	int currentLevelIndex;
 
 	LevelData currentLevelData;
 
@@ -23,8 +23,6 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		template = transform.Find("Template").GetComponent<Template>();
 		piece = transform.Find("Piece").GetComponent<SpriteRenderer>();
 		outline = transform.Find("Outline").GetComponent<SpriteRenderer>();
-
-		currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
 
 		GameHandler.instance.GameStateChanged += OnGameStateChanged;
     }
@@ -35,10 +33,11 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		{
 			case GameState.TransferringPiece:
 				transform.localScale = Vector3.zero;
-				piece.enabled = false;
+				outline.enabled = false;
+				LoadLevel();
 				break;
 			case GameState.BeforeGame:
-				piece.enabled = true;
+				outline.enabled = true;
 				InitTable();
 				break;
 			case GameState.InGame:
@@ -56,8 +55,10 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 
 	void StartGame()
 	{
+		WonLast = false;
 		InGameCutting = false;
-		LoadLevel(currentLevelIndex);
+		
+		Cutter.instance.Init(currentLevelData);
 		StartCoroutine(CountDownThanStart());
 	}
 
@@ -67,11 +68,10 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		InGameCutting = true;
 	}
 
-	void LoadLevel(int levelIndex)
+	void LoadLevel()
 	{
-		currentLevelData = GamePrefs.instance.LevelDatas[levelIndex];
-
-		Cutter.instance.Init(currentLevelData);
+		currentLevelData = GamePrefs.instance.LevelDatas[GameHandler.instance.CurrentExcercise];
+		
 		template.Init(currentLevelData.templatePath, currentLevelData.minimumPixelToCut);
 		piece.sprite = Resources.Load<Sprite>(currentLevelData.piecePath);
 		outline.sprite = Resources.Load<Sprite>(currentLevelData.outlinePath);
@@ -86,9 +86,12 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 	public void EndedCircle(int pixelsCut)
 	{
 		if (pixelsCut >= currentLevelData.minimumPixelToCut)
-			Debug.Log("You won!");
+		{
+			WonLast = true;
+			GameHandler.instance.GameWon();
+		}
 		else
-			Debug.Log("You lose!");
+			GameHandler.instance.GameLost();
 
 		InGameCutting = false;
 	}

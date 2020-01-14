@@ -58,6 +58,8 @@ public class ToggleController : MonoBehaviour
 
 	public void ClickToggle(int index)
 	{
+		if (index > 4)
+			return;
 		buttons[index].onClick.Invoke();
 	}
 }
