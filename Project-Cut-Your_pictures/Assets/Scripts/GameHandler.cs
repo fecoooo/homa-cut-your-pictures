@@ -19,7 +19,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	Transform currentPicture;
 	Piece currentPiece;
 
-	int currentLevelIndex;
+	int lastFinishedPiece;
 
 	protected override void OnAwake()
 	{
@@ -29,7 +29,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	
 	void Start()
 	{
-		currentLevelIndex = PlayerPrefs.GetInt("currentLevelIndex", 0);
+		lastFinishedPiece = PlayerPrefs.GetInt("LastFinishedPiece", -1);
 		SetPiecesCompleteState();
 
 		cuttingTable = cuttingTableScene.Find("CuttingTable").GetComponent<CuttingTable>();
@@ -51,11 +51,11 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 	IEnumerator FocusCurrentPieceRoutine()
 	{
-		currentPiece = pieces[currentLevelIndex].GetComponent<Piece>();
+		currentPiece = pieces[lastFinishedPiece + 1].GetComponent<Piece>();
 		currentPicture = currentPiece.transform.parent;
 		yield return CameraController.instance.FocusImageRoutine(currentPicture.position, true);
-		MenuUIHandler.instance.SetDisabled(currentLevelIndex + 1);
-		MenuUIHandler.instance.ClickToggle(currentLevelIndex);
+		MenuUIHandler.instance.SetDisabled(lastFinishedPiece + 2);
+		MenuUIHandler.instance.ClickToggle(lastFinishedPiece + 1);
 	}
 
 	public void StartGameOnPiece()
@@ -114,7 +114,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	void SetPiecesCompleteState()
 	{
 		for(int i = 0; i < pieces.Length; ++i)
-			pieces[i].SetCompleted(i <= currentLevelIndex);
+			pieces[i].SetCompleted(i <= lastFinishedPiece);
 	}
 
 	public enum GameState
