@@ -54,6 +54,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		currentPiece = pieces[currentLevelIndex].GetComponent<Piece>();
 		currentPicture = currentPiece.transform.parent;
 		yield return CameraController.instance.FocusImageRoutine(currentPicture.position, true);
+		MenuUIHandler.instance.SetDisabled(currentLevelIndex + 1);
+		MenuUIHandler.instance.ClickToggle(currentLevelIndex);
 	}
 
 	public void StartGameOnPiece()

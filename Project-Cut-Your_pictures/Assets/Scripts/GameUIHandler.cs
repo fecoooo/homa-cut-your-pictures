@@ -53,7 +53,7 @@ public class GameUIHandler:MonoBehaviour
 			case GameState.MainMenuZoomOut:
 				canvas.enabled = false;
 				break;
-			case GameState.InGame:
+			case GameState.BeforeGame:
 				canvas.enabled = true;
 				CountDown();
 				break;
