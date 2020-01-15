@@ -40,12 +40,6 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	
 	void Start()
 	{
-#if UNITY_EDITOR
-		QualitySettings.vSyncCount = 0;
-		Application.targetFrameRate = 30;
-#endif
-
-		PlayerPrefs.DeleteAll();
 		lastFinishedPiece = PlayerPrefs.GetInt("LastFinishedPiece", 2);
 		CurrentSelectedPiece = CurrentExcercise;
 		SetPiecesCompleteState();

@@ -29,6 +29,9 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 	{
 		outlineEffect = GetComponent<OutlineEffect>();
 		outlineAnim = GetComponent<OutlineAnimation>();
+
+		SetOutlineEnabled(false);
+
 		camera = GetComponent<Camera>();
 	}
 
