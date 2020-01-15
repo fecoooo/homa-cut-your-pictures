@@ -20,6 +20,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	}
 
 	public int CurrentSelectedPiece { get; private set; }
+	public GameObject MenuScene;
 
 	GameState currentState;
 
@@ -100,6 +101,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		yield return CameraController.instance.MovePieceRoutine(currentPiece.transform.position, cuttingTableScene.position, 
 			currentPiece.transform, cuttingTable.transform.localPosition);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
+
+		MenuScene.SetActive(false);
 
 		GameStateChanged(GameState.ArrivedOnCuttingTable);
 		yield return ChangeGameStateDelayedRoutine(TimeInArrivedAtCuttingTable, GameState.BeforeGame);
