@@ -40,7 +40,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	
 	void Start()
 	{
-		lastFinishedPiece = PlayerPrefs.GetInt("LastFinishedPiece", 2);
+		lastFinishedPiece = PlayerPrefs.GetInt("LastFinishedPiece", -1);
 		CurrentSelectedPiece = CurrentExcercise;
 		SetPiecesCompleteState();
 

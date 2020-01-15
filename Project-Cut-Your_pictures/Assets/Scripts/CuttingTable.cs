@@ -32,6 +32,7 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 		switch (state)
 		{
 			case GameState.TransferringPiece:
+				InGameCutting = false;
 				transform.localScale = Vector3.zero;
 				outline.enabled = false;
 				LoadLevel();
@@ -54,6 +55,8 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 
 	public void Restart()
 	{
+		InGameCutting = false;
+
 		template.Init(currentLevelData.templatePath, currentLevelData.minimumPixelToCut);
 		GameHandler.instance.Restart();
 	}
@@ -84,8 +87,8 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 
 	public void Fail()
 	{
+		GameHandler.instance.GameLost();
 		InGameCutting = false;
-		Debug.Log("You cut into the Piece :(((((((");
 	}
 
 	public void EndedCircle(int pixelsCut)

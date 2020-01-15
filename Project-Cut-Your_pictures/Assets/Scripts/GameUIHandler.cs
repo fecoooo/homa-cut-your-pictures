@@ -57,6 +57,7 @@ public class GameUIHandler:MonoBehaviour
 				break;
 			case GameState.BeforeGame:
 				UpdateProgress();
+				middleMsgLbl.gameObject.SetActive(false);
 				canvas.enabled = true;
 				CountDown();
 				break;

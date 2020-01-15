@@ -55,17 +55,8 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 		}
 	}
 
-	void FixedUpdate()
-    {
-		if (!CuttingTable.instance.InGameCutting)
-			return;
-
-		if (!isFreezed)
-			Move();
-
-		if (rotating)
-			Rotate();
-
+	private void Update()
+	{
 #if UNITY_EDITOR
 		if (Input.GetKeyDown(KeyCode.LeftArrow))
 			StartRotation(1);
@@ -84,6 +75,18 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 		if (Input.GetKeyDown(KeyCode.Space))
 			Freeze();
 #endif
+	}
+
+	void FixedUpdate()
+    {
+		if (!CuttingTable.instance.InGameCutting)
+			return;
+
+		if (!isFreezed)
+			Move();
+
+		if (rotating)
+			Rotate();
 	}
 
 	public void Init(LevelData currentLevelData)
