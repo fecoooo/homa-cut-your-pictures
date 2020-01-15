@@ -55,12 +55,15 @@ public class Template : MonoBehaviourSingleton<Template>
 		spriteRenderer.enabled = visualize;
 	}
 
-	void Update()
-    {
+	private void FixedUpdate()
+	{
 		if (!CuttingTable.instance.InGameCutting)
 			return;
 
 		DoCurrentCut();
+
+		if (visualize)
+			Visualize();
 	}
 
 	private void DoCurrentCut()
@@ -79,11 +82,7 @@ public class Template : MonoBehaviourSingleton<Template>
 			CuttingTable.instance.EndedCircle(pixelsCut);
 		}
 
-
 		currentTexture.SetPixel(CutterTexturePosition.x, CutterTexturePosition.y, Alpha);
-
-		if (visualize)
-			Visualize();
 	}
 
 	public void Init(string path, int minimumPixelToCut)

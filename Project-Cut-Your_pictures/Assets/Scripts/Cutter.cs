@@ -55,7 +55,7 @@ public class Cutter : MonoBehaviourSingleton<Cutter>
 		}
 	}
 
-	void Update()
+	void FixedUpdate()
     {
 		if (!CuttingTable.instance.InGameCutting)
 			return;
