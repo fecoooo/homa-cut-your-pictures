@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using cakeslice;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 
 	new Camera camera;
 
+	OutlineEffect outlineEffect;
+	OutlineAnimation outlineAnim;
+
 	bool IsZoomedIn
 	{
 		get => camera.orthographicSize - ZoomedInCameraSize < Mathf.Epsilon;
@@ -23,6 +27,8 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 
 	private void Start()
 	{
+		outlineEffect = GetComponent<OutlineEffect>();
+		outlineAnim = GetComponent<OutlineAnimation>();
 		camera = GetComponent<Camera>();
 	}
 
@@ -111,6 +117,12 @@ public class CameraController : MonoBehaviourSingleton<CameraController>
 		}
 
 		camera.orthographicSize = zoomType == ZoomType.In ? ZoomedInCameraSize : ZoomedOutCameraSize;
+	}
+
+	public void SetOutlineEnabled(bool isEnabled)
+	{
+		outlineEffect.enabled = isEnabled;
+		outlineAnim.enabled = isEnabled;
 	}
 
 	enum ZoomType

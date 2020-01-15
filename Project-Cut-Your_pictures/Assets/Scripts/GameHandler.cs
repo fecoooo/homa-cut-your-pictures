@@ -72,6 +72,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 			SetPiecesCompleteState();
 		}
 
+		CameraController.instance.SetOutlineEnabled(true);
 		GameStateChanged(GameState.MainMenuZoomIn);
 		StartCoroutine(FocusCurrentPieceRoutine());
 	}
@@ -87,6 +88,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 	public void StartGameOnPiece()
 	{
+		CameraController.instance.SetOutlineEnabled(false);
 		StartCoroutine(StartGameOnPieceRoutine());
 	}
 
@@ -142,11 +144,16 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 			currentPiece.transform, currentPiece.MenuLocalPosition);
 
 		currentPiece.ResetOnMenu();
+		CameraController.instance.SetOutlineEnabled(true);
 
 		if (CuttingTable.instance.WonLast && CurrentSelectedPiece == CurrentExcercise)
 			StartWinAnimation();
 		else
+		{
 			GameStateChanged(GameState.MainMenuZoomIn);
+			MenuUIHandler.instance.SetDisabled(CurrentExcercise + 1);
+			MenuUIHandler.instance.ClickToggle(CurrentExcercise);
+		}
 	}
 
 	private void StartWinAnimation()
@@ -164,8 +171,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 		lastFinishedPiece++;
 		PlayerPrefs.SetInt("LastFinishedPiece", lastFinishedPiece);
-		MenuUIHandler.instance.SetDisabled(lastFinishedPiece + 2);
-		MenuUIHandler.instance.ClickToggle(lastFinishedPiece + 1);
+		MenuUIHandler.instance.SetDisabled(CurrentExcercise + 1);
+		MenuUIHandler.instance.ClickToggle(CurrentExcercise);
 
 		GameStateChanged(GameState.MainMenuZoomIn);
 	}
