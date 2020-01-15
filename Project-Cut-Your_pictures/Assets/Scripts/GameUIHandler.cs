@@ -56,6 +56,7 @@ public class GameUIHandler:MonoBehaviour
 				canvas.enabled = false;
 				break;
 			case GameState.BeforeGame:
+				UpdateProgress();
 				canvas.enabled = true;
 				CountDown();
 				break;

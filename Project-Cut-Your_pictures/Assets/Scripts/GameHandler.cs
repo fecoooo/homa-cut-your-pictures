@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +8,7 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	public delegate void GameStateChangeHandler(GameState state);
 	public event GameStateChangeHandler GameStateChanged;
 
+	const float TimeInArrivedAtCuttingTable = .5f;
 	const float TimeInBeforeGameState = .5f;
 
 	public Transform[] pictures;
@@ -44,6 +45,9 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		QualitySettings.vSyncCount = 0;
 		Application.targetFrameRate = 30;
 #endif
+
+		PlayerPrefs.DeleteAll();
+		lastFinishedPiece = PlayerPrefs.GetInt("LastFinishedPiece", 2);
 		CurrentSelectedPiece = CurrentExcercise;
 		SetPiecesCompleteState();
 
@@ -99,8 +103,9 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 			currentPiece.transform, cuttingTable.transform.localPosition);
 		yield return currentPiece.GetComponent<Piece>().ScaleUp();
 
-		GameStateChanged(GameState.BeforeGame);
-		ChangeGameStateDelayed(TimeInBeforeGameState, GameState.InGame);
+		GameStateChanged(GameState.ArrivedOnCuttingTable);
+		yield return ChangeGameStateDelayedRoutine(TimeInArrivedAtCuttingTable, GameState.BeforeGame);
+		yield return ChangeGameStateDelayedRoutine(TimeInBeforeGameState, GameState.InGame);
 	}
 
 	internal void GameLost()
@@ -178,12 +183,19 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 			pieces[i].SetCompleted(i <= lastFinishedPiece);
 	}
 
+	public void Restart()
+	{
+		GameStateChanged(GameState.BeforeGame);
+		ChangeGameStateDelayed(TimeInBeforeGameState, GameState.InGame);
+	}
+
 	public enum GameState
 	{
 		Start,
 		MainMenuZoomOut,
 		MainMenuZoomIn,
 		TransferringPiece,
+		ArrivedOnCuttingTable,
 		BeforeGame,
 		InGame,
 		GameWon,

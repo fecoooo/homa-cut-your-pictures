@@ -36,9 +36,13 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 				outline.enabled = false;
 				LoadLevel();
 				break;
-			case GameState.BeforeGame:
+			case GameState.ArrivedOnCuttingTable:
 				outline.enabled = true;
 				InitTable();
+				break;
+			case GameState.BeforeGame:
+				InGameCutting = false;
+				Cutter.instance.Init(currentLevelData);
 				break;
 			case GameState.InGame:
 				StartGame();
@@ -50,15 +54,14 @@ public class CuttingTable : MonoBehaviourSingleton<CuttingTable>
 
 	public void Restart()
 	{
-		StartGame();
+		template.Init(currentLevelData.templatePath, currentLevelData.minimumPixelToCut);
+		GameHandler.instance.Restart();
 	}
 
 	void StartGame()
 	{
 		WonLast = false;
-		InGameCutting = false;
 		
-		Cutter.instance.Init(currentLevelData);
 		StartCoroutine(CountDownThanStart());
 	}
 

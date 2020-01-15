@@ -15,9 +15,6 @@ public class Template : MonoBehaviourSingleton<Template>
 		get => Mathf.Clamp01(pixelsCut / (float)minimumPixelToCut);
 	}
 
-	//int initialBlackPixels;
-	//int currentBlackPixels;
-
 	int pixelsCut;
 	int minimumPixelToCut;
 
@@ -29,6 +26,7 @@ public class Template : MonoBehaviourSingleton<Template>
 	Vector2 BotLeft_readonly;
 	Vector2 Size_readonly;
 
+	string pathToCurrentImg;
 
 	Vector2Int CutterTexturePosition
 	{
@@ -95,13 +93,6 @@ public class Template : MonoBehaviourSingleton<Template>
 		currentTexture.SetPixels(loadedTexture2D.GetPixels());
 		currentTexture.Apply();
 
-		//foreach(Color c in currentTexture.GetPixels())
-		//{
-		//	if(c == Color.black)
-		//		initialBlackPixels++;
-		//}
-
-		//currentBlackPixels = initialBlackPixels;
 		this.minimumPixelToCut = minimumPixelToCut;
 		pixelsCutFromPiece = 0;
 		pixelsCut = 0;
