@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,7 +40,10 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	
 	void Start()
 	{
-		lastFinishedPiece = PlayerPrefs.GetInt("LastFinishedPiece", -1);
+#if UNITY_EDITOR
+		QualitySettings.vSyncCount = 0;
+		Application.targetFrameRate = 30;
+#endif
 		CurrentSelectedPiece = CurrentExcercise;
 		SetPiecesCompleteState();
 
