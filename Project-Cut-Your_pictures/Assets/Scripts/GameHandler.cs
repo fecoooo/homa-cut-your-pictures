@@ -14,8 +14,6 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 	public Transform[] pictures;
 	public Piece[] pieces;
 
-	public Transform cuttingTableScene;
-
 	public int CurrentExcercise
 	{
 		get => lastFinishedPiece + 1;
@@ -25,7 +23,8 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 
 	GameState currentState;
 
-	CuttingTable cuttingTable;
+	public Transform cuttingTableScene;
+	public CuttingTable cuttingTable;
 	Transform currentPicture;
 	Piece currentPiece;
 
@@ -51,7 +50,6 @@ public class GameHandler : MonoBehaviourSingleton<GameHandler>
 		CurrentSelectedPiece = CurrentExcercise;
 		SetPiecesCompleteState();
 
-		cuttingTable = cuttingTableScene.Find("CuttingTable").GetComponent<CuttingTable>();
 		GameStateChanged(GameState.Start);
 	}
 
