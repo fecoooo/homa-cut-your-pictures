@@ -6,6 +6,8 @@ public class Quad : MonoBehaviour
 {
 	public int halfCutSize = 3;
 
+	public Transform mouseMarker;
+
 	Texture2D currentTexture;
 	readonly Color Alpha = new Color(0, 0, 0, 0);
 	Vector2Int textureSize;
@@ -13,8 +15,6 @@ public class Quad : MonoBehaviour
 
 	void Start()
     {
-		QualitySettings.vSyncCount = 0;
-
 		Texture2D loadedTexture = Resources.Load<Texture2D>("texture");
 		currentTexture = new Texture2D(loadedTexture.width, loadedTexture.height);
 		currentTexture.SetPixels(loadedTexture.GetPixels());
@@ -34,6 +34,7 @@ public class Quad : MonoBehaviour
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out hit, 100.0f))
 			{
+				mouseMarker.position = hit.point - new Vector3(0,0,1);
 				Vector2 cutPosition = hit.textureCoord * textureSize;
 				Cut(cutPosition.ToVector2Int());
 			}
