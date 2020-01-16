@@ -13,6 +13,8 @@ public class Quad : MonoBehaviour
 
 	void Start()
     {
+		QualitySettings.vSyncCount = 0;
+
 		Texture2D loadedTexture = Resources.Load<Texture2D>("texture");
 		currentTexture = new Texture2D(loadedTexture.width, loadedTexture.height);
 		currentTexture.SetPixels(loadedTexture.GetPixels());
